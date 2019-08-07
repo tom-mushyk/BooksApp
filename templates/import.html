@@ -7,6 +7,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>Books spis</title>
 </head>
 <body>
@@ -25,40 +26,40 @@
             {% for error in form.keyword.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td><br>
-            <span>Add filters</span>&nbsp;&nbsp;
+
             <div class="dropdown">
-              <button type="button" onclick="showFiltersMenu()" id="dropbtn" class="btn btn-primary">+</button>
+              <button type="button" onclick="showFiltersMenu()" id="dropbtn" class="btn btn-primary">Add filters</button>
               <div id="myDropdown" class="dropdown-content">
-                <a id="#showTitle">Title</a>
-                <a id="#showAuthor">Author</a>
-                <a id="#showPublisher">Publisher</a>
-                <a id="#showSubject">Subject</a>
-                <a id="#showIsbn">ISBN</a>
-                <a id="#showLccn">LCCN</a>
-                <a id="#showOclc">OCLC</a>
+                <a id="showTitle">Title</a>
+                <a id="showAuthor">Author</a>
+                <a id="showPublisher">Publisher</a>
+                <a id="showSubject">Subject</a>
+                <a id="showIsbn">ISBN</a>
+                <a id="showLccn">LCCN</a>
+                <a id="showOclc">OCLC</a>
               </div>
             </div>
             <br><br>
-            <div id="titleShow">
-            {{ form.title(type="hidden", class_="form-control", placeholder="title") }}
+            <div id="titleShow" style="display:none" >
+            {{ form.title(class_="form-control", placeholder="title") }}
             </div>
-            <div id="authorShow">
-            {{ form.author(type="hidden",class_="form-control", placeholder="author") }}
+            <div id="authorShow" style="display:none">
+            {{ form.author(class_="form-control", placeholder="author") }}
             </div>
-            <div id="publisherShow">
-            {{ form.publisher(type="hidden",class_="form-control", placeholder="publisher") }}
+            <div id="publisherShow" style="display:none">
+            {{ form.publisher(class_="form-control", placeholder="publisher") }}
             </div>
-            <div id="subjectShow">
-            {{ form.subject(type="hidden",class_="form-control", placeholder="subject") }}
+            <div id="subjectShow" style="display:none">
+            {{ form.subject(class_="form-control", placeholder="subject") }}
             </div>
-            <div id="isbnShow">
-            {{ form.isbn(type="hidden",class_="form-control", placeholder="isbn") }}
+            <div id="isbnShow" style="display:none">
+            {{ form.isbn(class_="form-control", placeholder="isbn") }}
             </div>
-            <div id="lccnShow">
-            {{ form.lccn(type="hidden",class_="form-control", placeholder="lccn") }}
+            <div id="lccnShow" style="display:none">
+            {{ form.lccn(class_="form-control", placeholder="lccn") }}
             </div>
-            <div id="oclcShow">
-            {{ form.oclc(type="hidden",class_="form-control", placeholder="oclc") }}
+            <div id="oclcShow" style="display:none">
+            {{ form.oclc(class_="form-control", placeholder="oclc") }}
             </div>
             <br><br>
             {{ form.submit }}
@@ -77,17 +78,42 @@
         </ul>
     </div>
 
-    <script>
-    $("#showTitle").click(function(){
-        $("#title").show()
-    });
-    </script>
 
+
+
+
+    <script>
+        $(document).ready(function(){
+          $("#showTitle").click(function(){
+            $("#titleShow").show();
+          });
+          $("#showAuthor").click(function(){
+            $("#authorShow").show();
+          });
+          $("#showPublisher").click(function(){
+            $("#publisherShow").show();
+          });
+          $("#showSubject").click(function(){
+            $("#subjectShow").show();
+          });
+          $("#showIsbn").click(function(){
+            $("#isbnShow").show();
+          });
+          $("#showLccn").click(function(){
+            $("#lccnShow").show();
+          });
+          $("#showOclc").click(function(){
+            $("#oclcShow").show();
+          });
+        });
+    </script>
 
     <script>
     function showFiltersMenu() {
       document.getElementById("myDropdown").classList.toggle("show");
     }
+
+
 
     window.onclick = function(event) {
       if (!event.target.matches('#dropbtn')) {
@@ -101,11 +127,14 @@
         }
       }
     }
+
+
+
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 
 </body>
 </html>
