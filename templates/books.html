@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Books spis</title>
+</head>
+<body>
+
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="btn btn-success" href="/add">Add a book</a>&nbsp;&nbsp;&nbsp;
+            <a class="btn btn-secondary" href="/books">Book list</a>
+        </nav>
+        <h1>List of books</h1>
+        <form action="/books" method="GET" name="searchBook" novalidate>
+            {{ form.hidden_tag() }}
+            {{ form.text(class_="form-control", placeholder="write something") }}<br>
+            {% for error in form.text.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}</td>
+            {{ form.select.label }}
+            {{ form.select(class_="form-control") }}<br>
+            {{ form.submit }}
+        </form>
+        <br>
+        <h2>Books found:</h2>
+        <ul class="list-group">
+            {% for book in books %}
+            <li class="list-group-item">{{ book.title, book.authors, book.publishedDate, book.industryIdentifiers, book.pageCount, book.imageLinks, book.language}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>
