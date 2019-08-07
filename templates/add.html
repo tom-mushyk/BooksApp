@@ -11,8 +11,9 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-           <a class="btn btn-success" href="/add">Add a book</a>&nbsp;&nbsp;&nbsp;
-            <a class="btn btn-secondary" href="/books">Book list</a>
+            <a class="btn btn-success" href="/add">Add a book</a>&nbsp;&nbsp;&nbsp;
+            <a class="btn btn-secondary" href="/books">Book list</a>&nbsp;&nbsp;&nbsp;
+            <a class="btn btn-primary" href="/import">Import books</a>
         </nav>
     <h1>Add your book</h1>
         <hr>
@@ -20,43 +21,43 @@
             {{ form.hidden_tag() }}
 
              <!-- TITLE -->
-            {{ form.title(class_="form-control", placeholder="title") }}<br>
+            {{ form.title(class_="form-control", placeholder="Title") }}<br>
             {% for error in form.title.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
 
              <!-- AUTHORS -->
-             {{ form.authors(class_="form-control", placeholder="authors") }}<br>
+             {{ form.authors(class_="form-control", placeholder="Authors") }}<br>
             {% for error in form.authors.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
 
              <!-- PUBLISHED DATE -->
-             {{ form.publishedDate(class_="form-control", placeholder="publishedDate (format YYYY-MM-DD)")}}<br>
+             {{ form.publishedDate(class_="form-control", placeholder="Published date (format YYYY-MM-DD)")}}<br>
             {% for error in form.publishedDate.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
 
              <!-- INDUSTRY IDENIFIERS -->
-             {{ form.industryIdentifiers(class_="form-control", placeholder="industry identifiers")}}<br>
+             {{ form.industryIdentifiers(class_="form-control", placeholder="Industry identifiers")}}<br>
             {% for error in form.industryIdentifiers.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
 
              <!-- PAGE COUNT -->
-             {{ form.pageCount(class_="form-control", placeholder="page count") }}<br>
+             {{ form.pageCount(class_="form-control", placeholder="Page count") }}<br>
             {% for error in form.pageCount.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
 
              <!-- IMAGE LINKS -->
-             {{ form.imageLinks(class_="form-control", placeholder="image links") }}<br>
+             {{ form.imageLinks(class_="form-control", placeholder="Image links") }}<br>
             {% for error in form.imageLinks.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
 
              <!-- LANGUAGE -->
-             {{ form.language(class_="form-control", placeholder="language") }}<br>
+             {{ form.language(class_="form-control", placeholder="Language") }}<br>
             {% for error in form.language.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>

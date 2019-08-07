@@ -14,15 +14,17 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="btn btn-success" href="/add">Add a book</a>&nbsp;&nbsp;&nbsp;
-            <a class="btn btn-secondary" href="/books">Book list</a>
+            <a class="btn btn-secondary" href="/books">Book list</a>&nbsp;&nbsp;&nbsp;
+            <a class="btn btn-primary" href="/import">Import books</a>
         </nav>
         <h1>List of books</h1>
-        <form action="/books" method="GET" name="searchBook" novalidate>
+        <form action="/books" method="POST" name="searchBook" novalidate>
             {{ form.hidden_tag() }}
-            {{ form.text(class_="form-control", placeholder="write something") }}<br>
+            {{ form.text(class_="form-control", placeholder="write something") }}
             {% for error in form.text.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
+            <br>
             {{ form.select.label }}
             {{ form.select(class_="form-control") }}<br>
             {{ form.submit }}
@@ -31,7 +33,8 @@
         <h2>Books found:</h2>
         <ul class="list-group">
             {% for book in books %}
-            <li class="list-group-item">{{ book.title, book.authors, book.publishedDate, book.industryIdentifiers, book.pageCount, book.imageLinks, book.language}}</li>
+            <li class="list-group-item">
+                <img src="{{book.imageLinks}}" alt="cover" height="100" width="70" /> <b>Title:</b> {{ book.title }}, <b>Authors:</b> {{book.authors}}, <b>Date published:</b> {{book.publishedDate.date()}}, <b>ISBN:</b> {{book.industryIdentifiers}}, <b>Page count</b> {{book.pageCount}}, <b>Language:</b> {{book.language}}</li>
             {% endfor %}
         </ul>
     </div>

@@ -17,3 +17,14 @@ class AddBookForm(FlaskForm):
     imageLinks = StringField('Image links', validators=[DataRequired()])
     language = StringField('Language', validators=[DataRequired()])
     submit = SubmitField('Add book')
+
+class ImportBookForm(FlaskForm):
+    keyword = StringField('Search', validators=[DataRequired()])
+    title = StringField('Title')
+    author = StringField('Author')
+    publisher = StringField('Publisher')
+    subject = StringField('Subject')
+    isbn = StringField('ISBN')
+    lccn = StringField('LCCN')
+    oclc = StringField('OCLC')
+    submit = SubmitField('Find books to import')

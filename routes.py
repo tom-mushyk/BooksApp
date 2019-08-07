@@ -1,28 +1,28 @@
 from flask import Blueprint, render_template, url_for, redirect
-from app.forms import SearchForm, AddBookForm
+from app.forms import SearchForm, AddBookForm, ImportBookForm
 from app.models import db, Book
 
 books = Blueprint('books', __name__, template_folder='templates')
 
 @books.route('/books', methods=['GET', 'POST'])
 def books_route():
+    books = Book.query.all()
     form = SearchForm()
     if form.validate_on_submit():
         if form.select.data == 'title':
-            books = Book.query.filter_by(title=form.select.data)
+            books = Book.query.filter_by(title=form.text.data)
             return render_template('books.html', form=form, books=books)
         elif form.select.data == 'authors':
-            books = Book.query.filter_by(authors=form.select.data).all()
+            books = Book.query.filter_by(authors=form.text.data)
             return render_template('books.html', form=form, books=books)
         elif form.select.data == 'language':
-            books = Book.query.filter_by(language=form.select.data)
+            books = Book.query.filter_by(language=form.text.data)
             return render_template('books.html', form=form, books=books)
         elif form.select.data == 'publishedDate':
-            books = Book.query.filter_by(publishedDate=form.select.data)
+            books = Book.query.filter_by(publishedDate=form.text.data)
             return render_template('books.html', form=form, books=books)
 
     else:
-        books = Book.query.all()
         return render_template('books.html', form=form, books=books)
 
 
@@ -51,4 +51,16 @@ def add_route():
             print('Cant add this book!')
 
     return render_template('add.html', form = form)
+
+@books.route('/import', methods=['GET', 'POST'])
+def import_route():
+    form = ImportBookForm()
+
+    if form.validate_on_submit():
+        #api_key = 'AIzaSyDDy0-CvA1TiI99S23MEJp5k_ogkpI1diA'
+        # url = 'https://www.googleapis.com/books/v1/volumes?q={}+inauthor:keyes&key=yourAPIKey'.format(form.keyword.data)
+        pass
+
+
+    return render_template('import.html', form=form)
 
