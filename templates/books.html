@@ -6,6 +6,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
     <title>Books spis</title>
 </head>
 <body>
@@ -31,12 +32,27 @@
         </form>
         <br>
         <h2>Books found:</h2>
-        <ul class="list-group">
+
+        <table class="list-group">
             {% for book in books %}
-            <li class="list-group-item">
-                <img src="{{book.imageLinks}}" alt="cover" height="100" width="70" /> <b>Title:</b> {{ book.title }}<br>, <b>Authors:</b> {{book.authors}}, <b>Date published:</b> {{book.publishedDate}}, <b>ISBN:</b> {{book.industryIdentifiers}}, <b>Page count</b> {{book.pageCount}}, <b>Language:</b> {{book.language}}</li>
+            <tr class="list-group-item">
+                <td class="" width="200px"><img src={{book.imageLinks}}" alt="cover" height="200" width="150" /></td>
+                <td class="">
+                    <b>Title:</b> {{ book.title}}<br>
+                    <b>Authors:</b> {{ book.authors}}<br>
+                    <b>Published date:</b> {{ book.publishedDate}}<br>
+                    <b>ISBN:</b> {{ book.industryIdentifiers }} <br>
+                    <b>Page count</b> {{ book.pageCount}} <br>
+                    <b>Language:</b> {{ book.language}}<br><br>
+                    <br>
+                    <br>
+
+                </td>
+
+            </tr>
+
             {% endfor %}
-        </ul>
+        </table>
     </div>
 
 </body>
