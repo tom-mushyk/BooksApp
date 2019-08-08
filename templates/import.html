@@ -20,7 +20,7 @@
             <a class="btn btn-primary" href="/import">Import books</a>
         </nav>
         <h1>Import books</h1>
-        <form action="/books" method="POST" name="searchBook" novalidate>
+        <form action="/import" method="POST" name="searchBook" novalidate>
             {{ form.hidden_tag() }}
             {{ form.keyword(class_="form-control", placeholder="write keyword") }}
             {% for error in form.keyword.errors %}
@@ -62,7 +62,7 @@
             {{ form.oclc(class_="form-control", placeholder="oclc") }}
             </div>
             <br><br>
-            {{ form.submit }}
+            {{ form.submit(class_="btn btn-dark") }}
             <br><br>
         </form>
 
@@ -70,12 +70,28 @@
         <br>
         <hr>
         <h2>Books found:</h2>
-        <ul class="list-group">
+        <table class="list-group">
             {% for book in books %}
-            <li class="list-group-item">
-                <img src="{{book.imageLinks}}" alt="cover" height="100" width="70" /> <b>Title:</b> {{ book.title }}, <b>Authors:</b> {{book.authors}}, <b>Date published:</b> {{book.publishedDate.date()}}, <b>ISBN:</b> {{book.industryIdentifiers}}, <b>Page count</b> {{book.pageCount}}, <b>Language:</b> {{book.language}}</li>
+            <tr class="list-group-item">
+                <td class="" width="200px"><img src="{{book['imageLinks']['thumbnail']}}" alt="cover" height="200" width="150" /></td>
+                <td class="">
+                    <b>Title:</b> {{ book['title']}}<br>
+                    <b>Authors:</b> {{ book['authors']}}<br>
+                    <b>Published date:</b> {{ book['publishedDate']}}<br>
+                    <b>ISBN:</b> {{ book['industryIdentifiers']}} <br>
+                    <b>Page count</b> {{ book['pageCount']}} <br>
+                    <b>Language:</b> {{ book['language']}}<br><br>
+                    <button type="button" class="btn btn-primary">Import</button>
+                    <br>
+                    <br>
+
+                </td>
+
+            </tr>
+
             {% endfor %}
-        </ul>
+        </table>
+
     </div>
 
 

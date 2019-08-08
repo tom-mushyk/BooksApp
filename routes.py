@@ -1,9 +1,12 @@
 from flask import Blueprint, render_template, url_for, redirect
 from app.forms import SearchForm, AddBookForm, ImportBookForm
 from app.models import db, Book
+import requests
+import json
 
 books = Blueprint('books', __name__, template_folder='templates')
 
+@books.route('/', methods=['GET', 'POST'])
 @books.route('/books', methods=['GET', 'POST'])
 def books_route():
     books = Book.query.all()
@@ -55,12 +58,81 @@ def add_route():
 @books.route('/import', methods=['GET', 'POST'])
 def import_route():
     form = ImportBookForm()
+    terms = ''
 
     if form.validate_on_submit():
-        #api_key = 'AIzaSyDDy0-CvA1TiI99S23MEJp5k_ogkpI1diA'
-        # url = 'https://www.googleapis.com/books/v1/volumes?q={}+inauthor:keyes&key=yourAPIKey'.format(form.keyword.data)
-        pass
+        #polacz sie z api i zaimportuj
+        api_key = 'AIzaSyDDy0-CvA1TiI99S23MEJp5k_ogkpI1diA'
 
+        termsBuilder = {'intitle' : form.title.data,
+                        'inauthor' : form.author.data,
+                        'inpublisher' : form.publisher.data,
+                        'subject' : form.subject.data,
+                        'isbn': form.isbn.data,
+                        'lccn': form.lccn.data,
+                        'oclc': form.oclc.data}
 
-    return render_template('import.html', form=form)
+        for key, value in termsBuilder.items():
+            if value != "":
+                terms = terms+'+{}:{}'.format(key, value)
+
+        url = 'https://www.googleapis.com/books/v1/volumes?q={}{}&key={}'.format(form.keyword.data, terms, api_key)
+        print(url)
+
+        response = requests.get(url)
+        data = response.json()
+        data = list(data['items'])
+
+        print(len(data))
+
+        booksToImport = []
+
+        for i in range(0, len(data)):
+
+            pageCount = '-'
+            if 'pageCount' in data[i]['volumeInfo'].keys():
+                pageCount = data[i]['volumeInfo']['pageCount']
+
+            imageLinks = '-'
+            if 'imageLinks' in data[i]['volumeInfo'].keys():
+                imageLinks = data[i]['volumeInfo']['imageLinks']
+
+            authors = '-'
+            if 'authors' in data[i]['volumeInfo'].keys():
+                for author in data[i]['volumeInfo']['authors']:
+                    authors = authors + author + ', '
+
+            publishedDate = '-'
+            if 'publishedDate' in data[i]['volumeInfo'].keys():
+                publishedDate = data[i]['volumeInfo']['publishedDate']
+
+            industryIdentifiers = '-'
+            if 'industryIdentifiers' in data[i]['volumeInfo'].keys():
+                industryIdentifiers = data[i]['volumeInfo']['industryIdentifiers']
+
+            title = '-'
+            if 'title' in data[i]['volumeInfo'].keys():
+                title = data[i]['volumeInfo']['title']
+
+            language = '-'
+            if 'language' in data[i]['volumeInfo'].keys():
+                language = data[i]['volumeInfo']['language']
+
+            booksToImport.append({
+                'title' : title,
+                'authors' : authors,
+                'publishedDate' : publishedDate,
+                'industryIdentifiers' : industryIdentifiers,
+                'pageCount' : pageCount,
+                'imageLinks' : imageLinks,
+                'language' : language
+
+            })
+
+            print(booksToImport)
+
+        return render_template('import.html', form=form, books=booksToImport)
+    else:
+
+        return render_template('import.html', form=form)
 

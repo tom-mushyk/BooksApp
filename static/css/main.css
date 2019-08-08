@@ -1,3 +1,7 @@
+body{
+    background-color: #F6F7F8;
+}
+
 #dropbtn {
   background-color: #3498DB;
   color: white;
@@ -36,3 +40,4 @@
 .dropdown a:hover {background-color: #ddd;}
 
 .show {display: block;}
+

@@ -34,7 +34,7 @@
         <ul class="list-group">
             {% for book in books %}
             <li class="list-group-item">
-                <img src="{{book.imageLinks}}" alt="cover" height="100" width="70" /> <b>Title:</b> {{ book.title }}, <b>Authors:</b> {{book.authors}}, <b>Date published:</b> {{book.publishedDate.date()}}, <b>ISBN:</b> {{book.industryIdentifiers}}, <b>Page count</b> {{book.pageCount}}, <b>Language:</b> {{book.language}}</li>
+                <img src="{{book.imageLinks}}" alt="cover" height="100" width="70" /> <b>Title:</b> {{ book.title }}<br>, <b>Authors:</b> {{book.authors}}, <b>Date published:</b> {{book.publishedDate}}, <b>ISBN:</b> {{book.industryIdentifiers}}, <b>Page count</b> {{book.pageCount}}, <b>Language:</b> {{book.language}}</li>
             {% endfor %}
         </ul>
     </div>
