@@ -81,7 +81,9 @@
                     <b>ISBN:</b> {{ book['industryIdentifiers']}} <br>
                     <b>Page count</b> {{ book['pageCount']}} <br>
                     <b>Language:</b> {{ book['language']}}<br><br>
-                    <button type="button" class="btn btn-primary">Import</button>
+                    <form method="POST" action="/importBook/{{ book['id'] }}">
+                        <input class="btn btn-primary" type="submit" value="Import"></form>
+                    </form>
                     <br>
                     <br>
 

@@ -3,8 +3,10 @@ from app.forms import SearchForm, AddBookForm, ImportBookForm
 from app.models import db, Book
 import requests
 import json
+from datetime import datetime
 
 books = Blueprint('books', __name__, template_folder='templates')
+api = Blueprint('api', __name__)
 
 @books.route('/', methods=['GET', 'POST'])
 @books.route('/books', methods=['GET', 'POST'])
@@ -89,6 +91,8 @@ def import_route():
 
         for i in range(0, len(data)):
 
+            id = data[i]['id']
+
             pageCount = '-'
             if 'pageCount' in data[i]['volumeInfo'].keys():
                 pageCount = data[i]['volumeInfo']['pageCount']
@@ -97,7 +101,7 @@ def import_route():
             if 'imageLinks' in data[i]['volumeInfo'].keys():
                 imageLinks = data[i]['volumeInfo']['imageLinks']
 
-            authors = '-'
+            authors = ''
             if 'authors' in data[i]['volumeInfo'].keys():
                 for author in data[i]['volumeInfo']['authors']:
                     authors = authors + author + ', '
@@ -125,8 +129,8 @@ def import_route():
                 'industryIdentifiers' : industryIdentifiers,
                 'pageCount' : pageCount,
                 'imageLinks' : imageLinks,
-                'language' : language
-
+                'language' : language,
+                'id' : id
             })
 
             print(booksToImport)
@@ -135,4 +139,64 @@ def import_route():
     else:
 
         return render_template('import.html', form=form)
+
+@books.route('/importBook/<string:id>', methods=['GET', 'POST'])
+def importBook(id):
+    url = 'https://www.googleapis.com/books/v1/volumes/{}'.format(id)
+    print(url)
+    response = requests.get(url)
+    data = response.json()
+
+    book = Book()
+
+    if 'title' in data['volumeInfo'].keys():
+        book.title = data['volumeInfo']['title']
+
+    if 'authors' in data['volumeInfo'].keys():
+        authors = ''
+        for author in data['volumeInfo']['authors']:
+            print(author)
+            authors = authors + author + ', '
+        book.authors = authors
+        print(authors)
+
+    if 'publishedDate' in data['volumeInfo'].keys():
+        date = data['volumeInfo']['publishedDate'][0:4]
+        book.publishedDate = datetime(year=int(date), month=1, day=1)
+
+    if 'industryIdentifiers' in data['volumeInfo'].keys():
+        industryIdentifers = ''
+        for item in data['volumeInfo']['industryIdentifiers']:
+            record = item['type']+':'+item['identifier']
+            industryIdentifers = industryIdentifers + record +', '
+            print(item['type']+':'+item['identifier'])
+        book.industryIdentifiers = industryIdentifers
+
+    if 'pageCount' in data['volumeInfo'].keys():
+        book.pageCount = data['volumeInfo']['pageCount']
+
+    if 'imageLinks' in data['volumeInfo'].keys():
+        for item in data['volumeInfo']['imageLinks'].values():
+            book.imageLinks = item
+            break;
+
+    if 'language' in data['volumeInfo'].keys():
+        book.language = data['volumeInfo']['language']
+
+    try:
+        db.session.add(book)
+        db.session.commit()
+        print('Book added successfully!')
+        return redirect(url_for('.books_route'))
+
+    except:
+        print('Cant add this book!')
+        return redirect(url_for('.books_route'))
+
+@api.route('/api')
+def api_route():
+    pass
+
+
+
 
