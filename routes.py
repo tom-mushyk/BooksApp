@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect
+from flask import Blueprint, render_template, url_for, redirect, jsonify, request
 from app.forms import SearchForm, AddBookForm, ImportBookForm
 from app.models import db, Book
 import requests
@@ -193,10 +193,54 @@ def importBook(id):
         print('Cant add this book!')
         return redirect(url_for('.books_route'))
 
-@api.route('/api')
-def api_route():
-    pass
+@api.route('/api/v1.0/books')
+def get_books():
 
+    books = Book.query.all()
+    listOfBooks = []
+    for book in books:
+        publishedDate = book.publishedDate
+        publishedDate = str(publishedDate)
 
+        listOfBooks.append({
+            'title': book.title,
+            'authors': book.authors,
+            'publishedDate': publishedDate,
+            'industryIdentifiers': book.industryIdentifiers,
+            'pageCount': book.pageCount,
+            'imageLinks': book.imageLinks,
+            'language': book.language
+
+        })
+
+    return jsonify(listOfBooks)
+
+@api.route('/api/v1.0/books?<string:tag>=<string:value>', methods=['GET', 'POST', 'DELETE', 'PUT'])
+def get_books_by_filter(tag, value):
+
+    books = None
+
+    if(tag == 'title'):
+        books = Book.query.filter_by(title = value)
+    elif(tag == 'authors'):
+        books = Book.query.filter_by(authors = value)
+
+    listOfBooks = []
+    for book in books:
+        publishedDate = book.publishedDate
+        publishedDate = str(publishedDate)
+
+        listOfBooks.append({
+            'title': book.title,
+            'authors': book.authors,
+            'publishedDate': publishedDate,
+            'industryIdentifiers': book.industryIdentifiers,
+            'pageCount': book.pageCount,
+            'imageLinks': book.imageLinks,
+            'language': book.language
+
+        })
+
+    return jsonify(listOfBooks)
 
 
