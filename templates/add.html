@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
-    <title>Books - Add</title>
-</head>
-<body>
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="btn btn-success" href="/add">Add a book</a>&nbsp;&nbsp;&nbsp;
-            <a class="btn btn-secondary" href="/books">Book list</a>&nbsp;&nbsp;&nbsp;
-            <a class="btn btn-primary" href="/import">Import books</a>
-        </nav>
+{% block content %}
     <h1>Add your book</h1>
         <hr>
          <form action="/add" method="POST" name="addBook" novalidate>
@@ -40,7 +25,7 @@
             {% endfor %}</td>
 
              <!-- INDUSTRY IDENIFIERS -->
-             {{ form.industryIdentifiers(class_="form-control", placeholder="Industry identifiers")}}<br>
+             {{ form.industryIdentifiers(class_="form-control", placeholder="Industry identifiers (format type:id, type2:id2)")}}<br>
             {% for error in form.industryIdentifiers.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}</td>
@@ -67,6 +52,4 @@
              {{ form.submit(class_="btn btn-primary") }}<br>
 
         </form>
-    </div>
-</body>
-</html>
+{% endblock content %}

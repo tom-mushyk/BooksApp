@@ -1,0 +1,46 @@
+{% extends "base.html"%}
+
+{% block content %}
+    <h1>Api v1.0 docs</h1>
+        <hr>
+    <div>
+        <h2>1. Get the entire library (json format)</h2>
+        <p>
+            <h5>Request</h5>
+            <div class="alert alert-success">
+                /api/v1.0/books
+            </div>
+            <br>
+
+            <h5>Response sample</h5>
+            <div class="alert alert-light">
+                <pre>
+                    <code>
+                        [
+                          {
+                            "authors": "Noite.pl, ",
+                            "id": 1,
+                            "imageLinks": "http://books.google.com/books/content?id=tHJVDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE73wzFknzjMGV9lFPJj7UVoFsY5khXGJiwgORZ7tJZIZkfTB8F2nPuHhg13kZFPlAt0qrO2YEeez0_wnYXdXoyaGLFzO4BE8gm_G8W7_I-MqlNLFk91MxyWgpCzaD2LFDoAKy-Ew&source=gbs_api",
+                            "industryIdentifiers": "None",
+                            "language": "pl",
+                            "pageCount": 12,
+                            "publishedDate": "None",
+                            "title": "J\u0119zyk Python"
+                          },
+                          {
+                            "authors": "Jon E. Swenson, Council of Europe, ",
+                            "id": 2,
+                            "imageLinks": "http://books.google.com/books/content?id=I9553WUdBnYC&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE737eMUmyhQjPtNywi2h4NBrfiu8HmsfsZsB2zV0Nc4fyLE1owJZIAUs5ty-6UXvipiRWkixsIIZOGMdt8ZJbiomc-Aob_nttEIklEILlQ8_aMBrqrqjkDjyFsfO-DWwIEekU5on&source=gbs_api",
+                            "industryIdentifiers": "ISBN_10:9287144265, ISBN_13:9789287144263, ",
+                            "language": "en",
+                            "pageCount": 69,
+                            "publishedDate": "2000",
+                            "title": "Action Plan for the Conservation of the Brown Bear in Europe (Ursus Arctos)"
+                          }
+                        ]
+                    </code>
+                </pre>
+            </div>
+        </p>
+    </div>
+{% endblock content %}

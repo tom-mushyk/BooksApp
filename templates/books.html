@@ -1,23 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
-    <title>Books spis</title>
-</head>
-<body>
-
-
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="btn btn-success" href="/add">Add a book</a>&nbsp;&nbsp;&nbsp;
-            <a class="btn btn-secondary" href="/books">Book list</a>&nbsp;&nbsp;&nbsp;
-            <a class="btn btn-primary" href="/import">Import books</a>
-        </nav>
+{% block content %}
         <h1>List of books</h1>
         <form action="/books" method="POST" name="searchBook" novalidate>
             {{ form.hidden_tag() }}
@@ -28,7 +11,7 @@
             <br>
             {{ form.select.label }}
             {{ form.select(class_="form-control") }}<br>
-            {{ form.submit }}
+            {{ form.submit(class_="btn btn-dark") }}
         </form>
         <br>
         <h2>Books found:</h2>
@@ -53,7 +36,4 @@
 
             {% endfor %}
         </table>
-    </div>
-
-</body>
-</html>
+{% endblock content %}

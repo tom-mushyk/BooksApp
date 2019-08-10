@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, url_for, redirect, jsonify, request
+from flask import Blueprint, render_template, url_for, redirect, jsonify, abort
+from flask_api import status
 from app.forms import SearchForm, AddBookForm, ImportBookForm
 from app.models import db, Book
 import requests
@@ -7,6 +8,8 @@ from datetime import datetime
 
 books = Blueprint('books', __name__, template_folder='templates')
 api = Blueprint('api', __name__)
+
+#-------------------- APP ROUTES ----------------------
 
 @books.route('/', methods=['GET', 'POST'])
 @books.route('/books', methods=['GET', 'POST'])
@@ -63,7 +66,6 @@ def import_route():
     terms = ''
 
     if form.validate_on_submit():
-        #polacz sie z api i zaimportuj
         api_key = 'AIzaSyDDy0-CvA1TiI99S23MEJp5k_ogkpI1diA'
 
         termsBuilder = {'intitle' : form.title.data,
@@ -108,7 +110,7 @@ def import_route():
 
             publishedDate = '-'
             if 'publishedDate' in data[i]['volumeInfo'].keys():
-                publishedDate = data[i]['volumeInfo']['publishedDate']
+                publishedDate = str(data[i]['volumeInfo']['publishedDate'])[0:4]
 
             industryIdentifiers = '-'
             if 'industryIdentifiers' in data[i]['volumeInfo'].keys():
@@ -193,6 +195,12 @@ def importBook(id):
         print('Cant add this book!')
         return redirect(url_for('.books_route'))
 
+@api.route('/api')
+def get_api_docs():
+        return render_template('api.html')
+
+# ---------------- API ROUTES --------------------------
+
 @api.route('/api/v1.0/books')
 def get_books():
 
@@ -202,28 +210,38 @@ def get_books():
         publishedDate = book.publishedDate
         publishedDate = str(publishedDate)
 
+        items = str(book.industryIdentifiers)
+
+
         listOfBooks.append({
+            'id' : book.id,
             'title': book.title,
             'authors': book.authors,
-            'publishedDate': publishedDate,
-            'industryIdentifiers': book.industryIdentifiers,
+            'publishedDate': str(publishedDate)[0:4],
+            'industryIdentifiers': items,
             'pageCount': book.pageCount,
             'imageLinks': book.imageLinks,
             'language': book.language
 
         })
 
-    return jsonify(listOfBooks)
+    return jsonify(listOfBooks), status.HTTP_200_OK
 
-@api.route('/api/v1.0/books?<string:tag>=<string:value>', methods=['GET', 'POST', 'DELETE', 'PUT'])
+@api.route('/api/v1.0/books/<string:tag>/<string:value>')
 def get_books_by_filter(tag, value):
 
     books = None
 
     if(tag == 'title'):
-        books = Book.query.filter_by(title = value)
+        books = Book.query.filter_by(title=value)
     elif(tag == 'authors'):
-        books = Book.query.filter_by(authors = value)
+        books = Book.query.filter_by(authors=value)
+    elif (tag == 'language'):
+        books = Book.query.filter_by(language=value)
+    elif (tag == 'publishedDate'):
+        books = Book.query.filter_by(publishedDate=value)
+    elif (tag is None) or (value is None):
+        abort(404)
 
     listOfBooks = []
     for book in books:
@@ -231,6 +249,7 @@ def get_books_by_filter(tag, value):
         publishedDate = str(publishedDate)
 
         listOfBooks.append({
+            'id' : book.id,
             'title': book.title,
             'authors': book.authors,
             'publishedDate': publishedDate,
@@ -241,6 +260,39 @@ def get_books_by_filter(tag, value):
 
         })
 
-    return jsonify(listOfBooks)
+    if len(listOfBooks) == 0:
+        abort(404)
+
+    else:
+        return jsonify(listOfBooks)
+
+@api.route('/api/v1.0/books/<int:bookid>')
+def get_books_by_id(bookid):
+    book = Book.query.filter_by(id=bookid).first()
+    print(book.id)
+    bookItem = []
+
+    publishedDate = book.publishedDate
+    publishedDate = str(publishedDate)[0:4]
+
+    bookItem.append({
+        'id': book.id,
+        'title': book.title,
+        'authors': book.authors,
+        'publishedDate': publishedDate,
+        'industryIdentifiers': book.industryIdentifiers,
+        'pageCount': book.pageCount,
+        'imageLinks': book.imageLinks,
+        'language': book.language
+
+    })
+
+    if len(bookItem) < 1:
+        abort(404)
+    else:
+        return jsonify(bookItem), status.HTTP_200_OK
 
 
+@api.errorhandler(404)
+def items_not_found(e):
+    return jsonify('Not found :('), status.HTTP_404_NOT_FOUND
