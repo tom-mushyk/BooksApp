@@ -105,7 +105,6 @@ def import_route():
         data = response.json()
         data = list(data['items'])
 
-        print(len(data))
 
         booksToImport = []
 
@@ -123,16 +122,19 @@ def import_route():
 
             authors = ''
             if 'authors' in data[i]['volumeInfo'].keys():
-                authors = data[i]['volumeInfo']['authors']
+                for item in data[i]['volumeInfo']['authors']:
+                    authors = authors + '{}, '.format(item)
 
 
             publishedDate = '-'
             if 'publishedDate' in data[i]['volumeInfo'].keys():
                 publishedDate = str(data[i]['volumeInfo']['publishedDate'])
 
-            industryIdentifiers = '-'
+            industryIdentifiers = ''
             if 'industryIdentifiers' in data[i]['volumeInfo'].keys():
-                industryIdentifiers = data[i]['volumeInfo']['industryIdentifiers']
+                for item in data[i]['volumeInfo']['industryIdentifiers']:
+
+                    industryIdentifiers = industryIdentifiers + '{}:{}, '.format(item['type'], item['identifier'])
 
             title = '-'
             if 'title' in data[i]['volumeInfo'].keys():
