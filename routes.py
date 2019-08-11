@@ -20,11 +20,14 @@ def books_route():
 
     if form.validate_on_submit:
         if form.select.data == 'title':
-            books = Book.query.filter_by(title=form.keyword.data)
+            query = "SELECT * FROM book WHERE title LIKE '%{}%' COLLATE NOCASE;".format(form.keyword.data)
+            books = db.engine.execute(query)
         elif form.select.data == 'authors':
-            books = Book.query.filter_by(authors=form.keyword.data)
+            query = "SELECT * FROM book WHERE authors LIKE '%{}%' COLLATE NOCASE;".format(form.keyword.data)
+            books = db.engine.execute(query)
         elif form.select.data == 'language':
-            books = Book.query.filter_by(language=form.keyword.data)
+            query = "SELECT * FROM book WHERE language LIKE '%{}%' COLLATE NOCASE;".format(form.keyword.data)
+            books = db.engine.execute(query)
 
         elif form.select.data == 'publishedDate':
             fromDate = form.fromDate.data
@@ -207,13 +210,13 @@ def get_books():
     listOfBooks = []
     for book in books:
         publishedDate = book.publishedDate
-        publishedDate = str(publishedDate)
+        publishedDate = str(publishedDate)[0:10]
 
         listOfBooks.append({
             'id' : book.id,
             'title': book.title,
             'authors': ast.literal_eval(book.authors),
-            'publishedDate': str(publishedDate),
+            'publishedDate': publishedDate,
             'industryIdentifiers': ast.literal_eval(book.industryIdentifiers),
             'pageCount': book.pageCount,
             'imageLinks': book.imageLinks,
@@ -229,18 +232,22 @@ def get_books_by_filter(tag, value):
     books = None
 
     if(tag == 'title'):
-        books = Book.query.filter_by(title=value)
+        query = "SELECT * FROM book WHERE title LIKE '%{}%' COLLATE NOCASE;".format(value)
+        books = db.engine.execute(query)
     elif(tag == 'authors'):
-        books = Book.query.filter_by(authors=value)
+        query = "SELECT * FROM book WHERE authors LIKE '%{}%' COLLATE NOCASE;".format(value)
+        books = db.engine.execute(query)
+
     elif (tag == 'language'):
-        books = Book.query.filter_by(language=value)
+        query = "SELECT * FROM book WHERE language LIKE '%{}%' COLLATE NOCASE;".format(value)
+        books = db.engine.execute(query)
     elif (tag is None) or (value is None):
         abort(404)
 
     listOfBooks = []
     for book in books:
         publishedDate = book.publishedDate
-        publishedDate = str(publishedDate)
+        publishedDate = str(publishedDate)[0:10]
 
         listOfBooks.append({
             'id' : book.id,
@@ -254,7 +261,7 @@ def get_books_by_filter(tag, value):
 
         })
 
-    if len(listOfBooks) == 0:
+    if len(listOfBooks) < 1:
         abort(404)
 
     else:
@@ -262,24 +269,23 @@ def get_books_by_filter(tag, value):
 
 @api.route('/api/v1.0/books/<int:bookid>')
 def get_books_by_id(bookid):
-    book = Book.query.filter_by(id=bookid).first()
-    print(book.id)
+    books = Book.query.filter_by(id=bookid)
     bookItem = []
+    for book in books:
+        publishedDate = book.publishedDate
+        publishedDate = str(publishedDate)[0:10]
 
-    publishedDate = book.publishedDate
-    publishedDate = str(publishedDate)
+        bookItem.append({
+            'id': book.id,
+            'title': book.title,
+            'authors': ast.literal_eval(book.authors),
+            'publishedDate': publishedDate,
+            'industryIdentifiers': ast.literal_eval(book.industryIdentifiers),
+            'pageCount': book.pageCount,
+            'imageLinks': book.imageLinks,
+            'language': book.language
 
-    bookItem.append({
-        'id': book.id,
-        'title': book.title,
-        'authors': ast.literal_eval(book.authors),
-        'publishedDate': publishedDate,
-        'industryIdentifiers': ast.literal_eval(book.industryIdentifiers),
-        'pageCount': book.pageCount,
-        'imageLinks': book.imageLinks,
-        'language': book.language
-
-    })
+        })
 
     if len(bookItem) < 1:
         abort(404)
@@ -294,7 +300,7 @@ def get_books_by_date(fromDate, toDate):
 
     for book in books:
         publishedDate = book.publishedDate
-        publishedDate = str(publishedDate)
+        publishedDate = str(publishedDate)[0:10]
 
         bookItems.append({
             'id': book.id,
