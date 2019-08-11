@@ -4,8 +4,10 @@ from wtforms.validators import DataRequired
 
 
 class SearchForm(FlaskForm):
-    text = StringField('Search', validators=[DataRequired()])
+    keyword = StringField('Search')
     select = SelectField('Search by', choices=[('title', 'Title'), ('authors', 'Authors'), ('language', 'Language'), ('publishedDate', 'Published date')])
+    fromDate = DateField('From date', format='%Y-%m-%d')
+    toDate = DateField('To date', format='%Y-%m-%d')
     submit = SubmitField('Find your book')
 
 class AddBookForm(FlaskForm):

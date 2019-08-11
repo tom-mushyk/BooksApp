@@ -1,10 +1,10 @@
 {% extends "base.html"%}
 
 {% block content %}
-    <h1>Api v1.0 docs</h1>
+    <h2>BooksApi v1.0 - documentation</h2>
         <hr>
     <div>
-        <h2>1. Get the entire library (json format)</h2>
+        <h3>1. Get the entire library </h3>
         <p>
             <h5>Request</h5>
             <div class="alert alert-success">
@@ -12,30 +12,204 @@
             </div>
             <br>
 
-            <h5>Response sample</h5>
+            <h5>Example</h5>
             <div class="alert alert-light">
                 <pre>
                     <code>
                         [
                           {
-                            "authors": "Noite.pl, ",
+                            "authors": [
+                              "Dustin Hansen"
+                            ],
                             "id": 1,
-                            "imageLinks": "http://books.google.com/books/content?id=tHJVDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE73wzFknzjMGV9lFPJj7UVoFsY5khXGJiwgORZ7tJZIZkfTB8F2nPuHhg13kZFPlAt0qrO2YEeez0_wnYXdXoyaGLFzO4BE8gm_G8W7_I-MqlNLFk91MxyWgpCzaD2LFDoAKy-Ew&source=gbs_api",
-                            "industryIdentifiers": "None",
-                            "language": "pl",
-                            "pageCount": 12,
-                            "publishedDate": "None",
-                            "title": "J\u0119zyk Python"
+                            "imageLinks": "http://books.google.com/books/content?id=62fZDAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE71pnwkVy19wbIaPqHwxNDuxRgLx_vwLcAGnK9oAo-M0bWisD9MwYU5MX5a1mM062hc8FlA7xRTy5yYvvN3qusohxEo4iR8jaXV_GsCUTESdLpQJ2muQSynSVYANeYTBhlg7ljof&source=gbs_api",
+                            "industryIdentifiers": [
+                              {
+                                "identifier": "1250080967",
+                                "type": "ISBN_10"
+                              },
+                              {
+                                "identifier": "9781250080967",
+                                "type": "ISBN_13"
+                              }
+                            ],
+                            "language": "en",
+                            "pageCount": 240,
+                            "publishedDate": "2016-01-01 00:00:00",
+                            "title": "Game On!"
                           },
                           {
-                            "authors": "Jon E. Swenson, Council of Europe, ",
+                            "authors": [
+                              "Drew Fudenberg",
+                              "Jean Tirole"
+                            ],
                             "id": 2,
-                            "imageLinks": "http://books.google.com/books/content?id=I9553WUdBnYC&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE737eMUmyhQjPtNywi2h4NBrfiu8HmsfsZsB2zV0Nc4fyLE1owJZIAUs5ty-6UXvipiRWkixsIIZOGMdt8ZJbiomc-Aob_nttEIklEILlQ8_aMBrqrqjkDjyFsfO-DWwIEekU5on&source=gbs_api",
-                            "industryIdentifiers": "ISBN_10:9287144265, ISBN_13:9789287144263, ",
+                            "imageLinks": "http://books.google.com/books/content?id=pFPHKwXro3QC&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE718KJV5PJyk2eH6lC-p9-jBWiXJDfrWwlGP2vrpmHYvPl9amY8MDngMKhHqevoCr3p9jLJ214R4zoEc-efZ-cm3sCZAiV9tz1WBzqolKxlIjcjQXgLyg7WNpnS5U74L7I4eup3V&source=gbs_api",
+                            "industryIdentifiers": [
+                              {
+                                "identifier": "0262061414",
+                                "type": "ISBN_10"
+                              },
+                              {
+                                "identifier": "9780262061414",
+                                "type": "ISBN_13"
+                              }
+                            ],
                             "language": "en",
-                            "pageCount": 69,
-                            "publishedDate": "2000",
-                            "title": "Action Plan for the Conservation of the Brown Bear in Europe (Ursus Arctos)"
+                            "pageCount": 579,
+                            "publishedDate": "1991-01-01 00:00:00",
+                            "title": "Game Theory"
+                          }
+                        ]
+                    </code>
+                </pre>
+            </div>
+        </p>
+    </div>
+
+<hr>
+
+    <div>
+        <h3>2. Get a book by id</h3>
+        <p>
+            <h5>Request</h5>
+            <div class="alert alert-success">
+                /api/v1.0/books/&lt;id&gt;
+            </div>
+            <br>
+
+            <h5>Example for (id=1)</h5>
+            <div class="alert alert-light">
+                <pre>
+                    <code>
+                        [
+                          {
+                            "authors": [
+                              "Dustin Hansen"
+                            ],
+                            "id": 1,
+                            "imageLinks": "http://books.google.com/books/content?id=62fZDAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE71pnwkVy19wbIaPqHwxNDuxRgLx_vwLcAGnK9oAo-M0bWisD9MwYU5MX5a1mM062hc8FlA7xRTy5yYvvN3qusohxEo4iR8jaXV_GsCUTESdLpQJ2muQSynSVYANeYTBhlg7ljof&source=gbs_api",
+                            "industryIdentifiers": [
+                              {
+                                "identifier": "1250080967",
+                                "type": "ISBN_10"
+                              },
+                              {
+                                "identifier": "9781250080967",
+                                "type": "ISBN_13"
+                              }
+                            ],
+                            "language": "en",
+                            "pageCount": 240,
+                            "publishedDate": "2016",
+                            "title": "Game On!"
+                          }
+                        ]
+                    </code>
+                </pre>
+            </div>
+        </p>
+    </div>
+
+<hr>
+
+    <div>
+        <h3>3. Get a book by title, author or language</h3>
+        <p>
+            <h5>Request</h5>
+            <div class="alert alert-success">
+                /api/v1.0/books/&lt;field&gt;/&lt;keyword&gt;
+            </div>
+            <br>
+
+            <h5>Example for (field=title) and (keyword=Python)</h5>
+            <div class="alert alert-light">
+                <pre>
+                    <code>
+                        [
+                          {
+                            "authors": [
+                              "Chris Fehily"
+                            ],
+                            "id": 3,
+                            "imageLinks": "http://books.google.com/books/content?id=carqdIdfVlYC&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE72KW0URYpZhQjvPIvuUl6zxb6SSMdh6vdsR5T8lXczmqmPen0iP92z5YmfXy1I71gsO2zqwJwPEBVQSCFymPaPDXUKJ_iwWmxmAUdIvo4Cf9tcPw3ADz6ZEEMznZusRXTJOQbzj&source=gbs_api",
+                            "industryIdentifiers": [
+                              {
+                                "identifier": "0201748843",
+                                "type": "ISBN_10"
+                              },
+                              {
+                                "identifier": "9780201748840",
+                                "type": "ISBN_13"
+                              }
+                            ],
+                            "language": "en",
+                            "pageCount": 410,
+                            "publishedDate": "2002-01-01 00:00:00",
+                            "title": "Python"
+                          }
+                        ]
+                    </code>
+                </pre>
+            </div>
+        </p>
+    </div>
+
+    <div>
+        <h3>4. Get a book by dates range</h3>
+        <p>
+            <h5>Request</h5>
+            <div class="alert alert-success">
+                /api/v1.0/books/date/&lt;fromDate&gt;/&lt;toDate&gt;
+            </div>
+            <br>
+
+            <h5>Example for (fromDate=2005-01-01) and (toDate=2020-01-01)</h5>
+            <div class="alert alert-light">
+                <pre>
+                    <code>
+                        [
+                          {
+                            "authors": [
+                              "Dustin Hansen"
+                            ],
+                            "id": 1,
+                            "imageLinks": "http://books.google.com/books/content?id=62fZDAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE71pnwkVy19wbIaPqHwxNDuxRgLx_vwLcAGnK9oAo-M0bWisD9MwYU5MX5a1mM062hc8FlA7xRTy5yYvvN3qusohxEo4iR8jaXV_GsCUTESdLpQJ2muQSynSVYANeYTBhlg7ljof&source=gbs_api",
+                            "industryIdentifiers": [
+                              {
+                                "identifier": "1250080967",
+                                "type": "ISBN_10"
+                              },
+                              {
+                                "identifier": "9781250080967",
+                                "type": "ISBN_13"
+                              }
+                            ],
+                            "language": "en",
+                            "pageCount": 240,
+                            "publishedDate": "2016-01-01 00:00:00.000000",
+                            "title": "Game On!"
+                          },
+                          {
+                            "authors": [
+                              "Wendelin Van Draanen"
+                            ],
+                            "id": 4,
+                            "imageLinks": "http://books.google.com/books/content?id=LbmL1pKL3dMC&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE73jCX0bchaGxZczLYi54gfVuTL6CewIWQ7BRzGSkOIxfjTBlzFHMEIMO4ZJ5DUiU_E5uAlyCQFAIQsLZ5YQHdq-YhxLgBH4-PVJSxXiMbmip6snXqdw63u-FrvvQgoLp2JqxRbh&source=gbs_api",
+                            "industryIdentifiers": [
+                              {
+                                "identifier": "0307545407",
+                                "type": "ISBN_10"
+                              },
+                              {
+                                "identifier": "9780307545404",
+                                "type": "ISBN_13"
+                              }
+                            ],
+                            "language": "en",
+                            "pageCount": 240,
+                            "publishedDate": "2008-12-02 00:00:00.000000",
+                            "title": "Sammy Keyes and the Sisters of Mercy"
                           }
                         ]
                     </code>

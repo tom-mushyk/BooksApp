@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+        {% for message in get_flashed_messages() %}
+        <div class="flash"><p>{{ message }}</p></div>
+        {% endfor %}
+
         <h1>List of books</h1>
-        <form action="/books" method="POST" name="searchBook" novalidate>
+        <form action="/books" method="POST" name="form" novalidate>
+
             {{ form.hidden_tag() }}
-            {{ form.text(class_="form-control", placeholder="write something") }}
-            {% for error in form.text.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+            <div id="searchBox">
+            {{ form.keyword(class_="form-control", placeholder="write something") }}
+            </div>
+            <div id="dateBox" style="display:none;">
+            {{ form.fromDate.label }}
+            {{ form.fromDate(class_="form-control", placeholder="for example 1997-07-09") }}
+            {{ form.toDate.label }}
+            {{ form.toDate(class_="form-control", placeholder="for example 2019-03-20") }}
+            </div>
             <br>
             {{ form.select.label }}
             {{ form.select(class_="form-control") }}<br>
@@ -19,11 +29,11 @@
         <table class="list-group">
             {% for book in books %}
             <tr class="list-group-item">
-                <td class="" width="200px"><img src={{book.imageLinks}}" alt="cover" height="200" width="150" /></td>
-                <td class="">
+                <td width="200px"><img src={{book.imageLinks}}" alt="cover" height="200" width="150" /></td>
+                <td>
                     <b>Title:</b> {{ book.title}}<br>
-                    <b>Authors:</b> {{ book.authors}}<br>
-                    <b>Published date:</b> {{ book.publishedDate}}<br>
+                    <b>Authors:</b> {{ book.authors }}<br>
+                    <b>Published date:</b> {{ book.publishedDate }}<br>
                     <b>Industry identifiers:</b> {{ book.industryIdentifiers }} <br>
                     <b>Page count</b> {{ book.pageCount}} <br>
                     <b>Language:</b> {{ book.language}}<br><br>
@@ -36,4 +46,24 @@
 
             {% endfor %}
         </table>
+
+        <script>
+            $(document).ready(function(){
+              $("#select").change(function(){
+                 if($(this).children("option:selected").val()== "publishedDate"){
+                    $("#dateBox").show()
+                    $("#searchBox").hide()
+                 }
+                 else{
+                    $("#dateBox").hide()
+                    $("#searchBox").show()
+
+                 }
+              });
+            });
+        </script>
+
+
+
+
 {% endblock content %}

@@ -1,39 +1,41 @@
-from flask import Blueprint, render_template, url_for, redirect, jsonify, abort
+from flask import Blueprint, render_template, url_for, redirect, jsonify, abort, flash, get_flashed_messages
 from flask_api import status
 from app.forms import SearchForm, AddBookForm, ImportBookForm
 from app.models import db, Book
 import requests
-import json
 from datetime import datetime
+import ast
 
 books = Blueprint('books', __name__, template_folder='templates')
 api = Blueprint('api', __name__)
 
 #-------------------- APP ROUTES ----------------------
 
-@books.route('/', methods=['GET', 'POST'])
+
+
 @books.route('/books', methods=['GET', 'POST'])
 def books_route():
-    books = Book.query.all()
     form = SearchForm()
-    if form.validate_on_submit():
-        if form.select.data == 'title':
-            books = Book.query.filter_by(title=form.text.data)
-            return render_template('books.html', form=form, books=books)
-        elif form.select.data == 'authors':
-            books = Book.query.filter_by(authors=form.text.data)
-            return render_template('books.html', form=form, books=books)
-        elif form.select.data == 'language':
-            books = Book.query.filter_by(language=form.text.data)
-            return render_template('books.html', form=form, books=books)
-        elif form.select.data == 'publishedDate':
-            books = Book.query.filter_by(publishedDate=form.text.data)
-            return render_template('books.html', form=form, books=books)
+    books = Book.query.all()
 
+    if form.validate_on_submit:
+        if form.select.data == 'title':
+            books = Book.query.filter_by(title=form.keyword.data)
+        elif form.select.data == 'authors':
+            books = Book.query.filter_by(authors=form.keyword.data)
+        elif form.select.data == 'language':
+            books = Book.query.filter_by(language=form.keyword.data)
+
+        elif form.select.data == 'publishedDate':
+            fromDate = form.fromDate.data
+            toDate = form.toDate.data
+            print(fromDate)
+            query = "SELECT * FROM book WHERE publishedDate BETWEEN '{} 00:00:00' AND '{} 00:00:00'".format(fromDate,toDate)
+            books = db.engine.execute(query)
+
+        return render_template('books.html', form=form, books=books)
     else:
         return render_template('books.html', form=form, books=books)
-
-
 
 @books.route('/add', methods=['GET', 'POST'])
 def add_route():
@@ -105,12 +107,12 @@ def import_route():
 
             authors = ''
             if 'authors' in data[i]['volumeInfo'].keys():
-                for author in data[i]['volumeInfo']['authors']:
-                    authors = authors + author + ', '
+                authors = data[i]['volumeInfo']['authors']
+
 
             publishedDate = '-'
             if 'publishedDate' in data[i]['volumeInfo'].keys():
-                publishedDate = str(data[i]['volumeInfo']['publishedDate'])[0:4]
+                publishedDate = str(data[i]['volumeInfo']['publishedDate'])
 
             industryIdentifiers = '-'
             if 'industryIdentifiers' in data[i]['volumeInfo'].keys():
@@ -155,24 +157,19 @@ def importBook(id):
         book.title = data['volumeInfo']['title']
 
     if 'authors' in data['volumeInfo'].keys():
-        authors = ''
-        for author in data['volumeInfo']['authors']:
-            print(author)
-            authors = authors + author + ', '
-        book.authors = authors
-        print(authors)
+        book.authors = str(data['volumeInfo']['authors'])
 
     if 'publishedDate' in data['volumeInfo'].keys():
-        date = data['volumeInfo']['publishedDate'][0:4]
-        book.publishedDate = datetime(year=int(date), month=1, day=1)
-
+        if len(data['volumeInfo']['publishedDate']) > 4:
+            year = data['volumeInfo']['publishedDate'][0:4]
+            month = data['volumeInfo']['publishedDate'][5:7]
+            day = data['volumeInfo']['publishedDate'][8-10]
+            book.publishedDate = datetime(year=int(year), month=int(month), day=int(day))
+        elif len(data['volumeInfo']['publishedDate']) == 4:
+            year = data['volumeInfo']['publishedDate']
+            book.publishedDate = datetime(year=int(year), month=1, day=1)
     if 'industryIdentifiers' in data['volumeInfo'].keys():
-        industryIdentifers = ''
-        for item in data['volumeInfo']['industryIdentifiers']:
-            record = item['type']+':'+item['identifier']
-            industryIdentifers = industryIdentifers + record +', '
-            print(item['type']+':'+item['identifier'])
-        book.industryIdentifiers = industryIdentifers
+        book.industryIdentifiers = str(data['volumeInfo']['industryIdentifiers'])
 
     if 'pageCount' in data['volumeInfo'].keys():
         book.pageCount = data['volumeInfo']['pageCount']
@@ -195,11 +192,13 @@ def importBook(id):
         print('Cant add this book!')
         return redirect(url_for('.books_route'))
 
+
+
+# ---------------- API ROUTES --------------------------
+
 @api.route('/api')
 def get_api_docs():
         return render_template('api.html')
-
-# ---------------- API ROUTES --------------------------
 
 @api.route('/api/v1.0/books')
 def get_books():
@@ -210,15 +209,12 @@ def get_books():
         publishedDate = book.publishedDate
         publishedDate = str(publishedDate)
 
-        items = str(book.industryIdentifiers)
-
-
         listOfBooks.append({
             'id' : book.id,
             'title': book.title,
-            'authors': book.authors,
-            'publishedDate': str(publishedDate)[0:4],
-            'industryIdentifiers': items,
+            'authors': ast.literal_eval(book.authors),
+            'publishedDate': str(publishedDate),
+            'industryIdentifiers': ast.literal_eval(book.industryIdentifiers),
             'pageCount': book.pageCount,
             'imageLinks': book.imageLinks,
             'language': book.language
@@ -238,8 +234,6 @@ def get_books_by_filter(tag, value):
         books = Book.query.filter_by(authors=value)
     elif (tag == 'language'):
         books = Book.query.filter_by(language=value)
-    elif (tag == 'publishedDate'):
-        books = Book.query.filter_by(publishedDate=value)
     elif (tag is None) or (value is None):
         abort(404)
 
@@ -251,9 +245,9 @@ def get_books_by_filter(tag, value):
         listOfBooks.append({
             'id' : book.id,
             'title': book.title,
-            'authors': book.authors,
+            'authors': ast.literal_eval(book.authors),
             'publishedDate': publishedDate,
-            'industryIdentifiers': book.industryIdentifiers,
+            'industryIdentifiers': ast.literal_eval(book.industryIdentifiers),
             'pageCount': book.pageCount,
             'imageLinks': book.imageLinks,
             'language': book.language
@@ -273,14 +267,14 @@ def get_books_by_id(bookid):
     bookItem = []
 
     publishedDate = book.publishedDate
-    publishedDate = str(publishedDate)[0:4]
+    publishedDate = str(publishedDate)
 
     bookItem.append({
         'id': book.id,
         'title': book.title,
-        'authors': book.authors,
+        'authors': ast.literal_eval(book.authors),
         'publishedDate': publishedDate,
-        'industryIdentifiers': book.industryIdentifiers,
+        'industryIdentifiers': ast.literal_eval(book.industryIdentifiers),
         'pageCount': book.pageCount,
         'imageLinks': book.imageLinks,
         'language': book.language
@@ -291,6 +285,33 @@ def get_books_by_id(bookid):
         abort(404)
     else:
         return jsonify(bookItem), status.HTTP_200_OK
+
+@api.route('/api/v1.0/books/date/<string:fromDate>/<string:toDate>')
+def get_books_by_date(fromDate, toDate):
+    query = "SELECT * FROM book WHERE publishedDate BETWEEN '{} 00:00:00' AND '{} 00:00:00'".format(fromDate, toDate)
+    books = db.engine.execute(query)
+    bookItems = []
+
+    for book in books:
+        publishedDate = book.publishedDate
+        publishedDate = str(publishedDate)
+
+        bookItems.append({
+            'id': book.id,
+            'title': book.title,
+            'authors': ast.literal_eval(book.authors),
+            'publishedDate': publishedDate,
+            'industryIdentifiers': ast.literal_eval(book.industryIdentifiers),
+            'pageCount': book.pageCount,
+            'imageLinks': book.imageLinks,
+            'language': book.language
+
+        })
+
+    if len(bookItems) < 1:
+        abort(404)
+    else:
+        return jsonify(bookItems), status.HTTP_200_OK
 
 
 @api.errorhandler(404)

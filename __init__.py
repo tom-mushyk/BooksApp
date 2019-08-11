@@ -1,5 +1,5 @@
 from flask import Flask
-from app.models import db, migrate
+from app.models import db, migrate, Book
 from app.routes import books, api
 
 app = Flask(__name__)
