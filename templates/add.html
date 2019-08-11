@@ -10,43 +10,43 @@
             {{ form.title(class_="form-control", placeholder="Title") }}<br>
             {% for error in form.title.errors %}
                     <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+            {% endfor %}
 
              <!-- AUTHORS -->
-             {{ form.authors(class_="form-control", placeholder="Authors") }}<br>
-            {% for error in form.authors.errors %}
+             {{ form.authors(class_="form-control", placeholder="Authors (ex. Nora Roberts,Dan Brown)") }}<br>
+             {% for error in form.authors.errors %}
                     <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+             {% endfor %}
 
              <!-- PUBLISHED DATE -->
-             {{ form.publishedDate(class_="form-control", placeholder="Published date (format YYYY-MM-DD)")}}<br>
+             {{ form.publishedDate(class_="form-control", placeholder="Published date (ex. 2019-03-23)")}}<br>
             {% for error in form.publishedDate.errors %}
                     <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+            {% endfor %}
 
              <!-- INDUSTRY IDENIFIERS -->
-             {{ form.industryIdentifiers(class_="form-control", placeholder="Industry identifiers (format type:id, type2:id2)")}}<br>
+             {{ form.industryIdentifiers(class_="form-control", placeholder="Industry identifiers (ex. ISBN_10:0123456789,ISBN_13:0123456789123)")}}<br>
             {% for error in form.industryIdentifiers.errors %}
                     <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+            {% endfor %}
 
              <!-- PAGE COUNT -->
              {{ form.pageCount(class_="form-control", placeholder="Page count") }}<br>
             {% for error in form.pageCount.errors %}
                     <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+            {% endfor %}
 
              <!-- IMAGE LINKS -->
-             {{ form.imageLinks(class_="form-control", placeholder="Image links") }}<br>
+             {{ form.imageLinks(class_="form-control", placeholder="Image url") }}<br>
             {% for error in form.imageLinks.errors %}
                     <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+            {% endfor %}
 
              <!-- LANGUAGE -->
-             {{ form.language(class_="form-control", placeholder="Language") }}<br>
+             {{ form.language(class_="form-control", placeholder="Language (ex. pl, en)") }}<br>
             {% for error in form.language.errors %}
                     <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</td>
+            {% endfor %}
 
              <!-- SUBMIT -->
              {{ form.submit(class_="btn btn-primary") }}<br>

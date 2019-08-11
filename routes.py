@@ -12,7 +12,7 @@ api = Blueprint('api', __name__)
 #-------------------- APP ROUTES ----------------------
 
 
-
+@books.route('/', methods=['GET', 'POST'])
 @books.route('/books', methods=['GET', 'POST'])
 def books_route():
     form = SearchForm()
@@ -47,9 +47,22 @@ def add_route():
     if form.validate_on_submit():
         book = Book()
         book.title = form.title.data
-        book.authors = form.authors.data
+
+        authors = str(form.authors.data).split(',')
+        book.authors = str(authors)
+
         book.publishedDate = form.publishedDate.data
-        book.industryIdentifiers = form.industryIdentifiers.data
+
+        identifiers = str(form.industryIdentifiers.data).split(',')
+        listOfDicts = []
+        for identifier in identifiers:
+            listOfItems = identifier.split(':')
+            dictItems = {}
+            dictItems['type'] = listOfItems[0]
+            dictItems['identifier'] = listOfItems[1]
+            listOfDicts.append(dictItems)
+
+        book.industryIdentifiers = str(listOfDicts)
         book.pageCount = form.pageCount.data
         book.imageLinks = form.imageLinks.data
         book.language = form.language.data
@@ -163,11 +176,16 @@ def importBook(id):
         book.authors = str(data['volumeInfo']['authors'])
 
     if 'publishedDate' in data['volumeInfo'].keys():
-        if len(data['volumeInfo']['publishedDate']) > 4:
+        if len(data['volumeInfo']['publishedDate']) > 7:
             year = data['volumeInfo']['publishedDate'][0:4]
             month = data['volumeInfo']['publishedDate'][5:7]
             day = data['volumeInfo']['publishedDate'][8-10]
             book.publishedDate = datetime(year=int(year), month=int(month), day=int(day))
+
+        elif (len(data['volumeInfo']['publishedDate']) < 8) and (len(data['volumeInfo']['publishedDate']) > 4):
+            year = data['volumeInfo']['publishedDate'][0:4]
+            month = data['volumeInfo']['publishedDate'][5:7]
+            book.publishedDate = datetime(year=int(year), month=int(month), day=1)
         elif len(data['volumeInfo']['publishedDate']) == 4:
             year = data['volumeInfo']['publishedDate']
             book.publishedDate = datetime(year=int(year), month=1, day=1)
@@ -224,7 +242,10 @@ def get_books():
 
         })
 
-    return jsonify(listOfBooks), status.HTTP_200_OK
+    if len(books) < 1:
+        abort(404)
+    else:
+        return jsonify(listOfBooks), status.HTTP_200_OK
 
 @api.route('/api/v1.0/books/<string:tag>/<string:value>')
 def get_books_by_filter(tag, value):
@@ -241,8 +262,10 @@ def get_books_by_filter(tag, value):
     elif (tag == 'language'):
         query = "SELECT * FROM book WHERE language LIKE '%{}%' COLLATE NOCASE;".format(value)
         books = db.engine.execute(query)
-    elif (tag is None) or (value is None):
+
+    if books == None:
         abort(404)
+
 
     listOfBooks = []
     for book in books:
