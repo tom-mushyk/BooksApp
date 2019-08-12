@@ -1,6 +1,6 @@
 from flask import Flask
-from .models import db, migrate, Book
-from .routes import books, api
+from models import db, migrate, Book
+from routes import books, api
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books.db'
