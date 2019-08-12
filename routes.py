@@ -36,9 +36,12 @@ def books_route():
             query = "SELECT * FROM book WHERE publishedDate BETWEEN '{} 00:00:00' AND '{} 00:00:00'".format(fromDate,toDate)
             books = db.engine.execute(query)
 
-        return render_template('books.html', form=form, books=books)
-    else:
-        return render_template('books.html', form=form, books=books)
+
+
+    return render_template('books.html', form=form, books=books)
+
+   # else:
+    #    return render_template('books.html', form=form, books=books)
 
 @books.route('/add', methods=['GET', 'POST'])
 def add_route():

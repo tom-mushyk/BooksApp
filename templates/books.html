@@ -10,13 +10,13 @@
 
             {{ form.hidden_tag() }}
             <div id="searchBox">
-            {{ form.keyword(class_="form-control", placeholder="write something") }}
+            {{ form.keyword(class_="form-control", placeholder="keyword") }}
             </div>
             <div id="dateBox" style="display:none;">
             {{ form.fromDate.label }}
-            {{ form.fromDate(class_="form-control", placeholder="for example 1997-07-09") }}
+            {{ form.fromDate(class_="form-control", placeholder="e.g. example 1997-07-09") }}
             {{ form.toDate.label }}
-            {{ form.toDate(class_="form-control", placeholder="for example 2019-03-20") }}
+            {{ form.toDate(class_="form-control", placeholder="e.g. example 2019-03-20") }}
             </div>
             <br>
             {{ form.select.label }}
@@ -33,7 +33,7 @@
                 <td>
                     <b>Title:</b> {{ book.title}}<br>
                     <b>Authors:</b> {{ book.authors }}<br>
-                    <b>Published date:</b> {{ book.publishedDate }}<br>
+                    <b>Published date:</b> {{ book.publishedDate.year }}<br>
                     <b>Industry identifiers:</b> {{ book.industryIdentifiers }} <br>
                     <b>Page count</b> {{ book.pageCount}} <br>
                     <b>Language:</b> {{ book.language}}<br><br>

@@ -13,19 +13,19 @@
             {% endfor %}
 
              <!-- AUTHORS -->
-             {{ form.authors(class_="form-control", placeholder="Authors (ex. Nora Roberts,Dan Brown)") }}<br>
+             {{ form.authors(class_="form-control", placeholder="Authors (e.g. Nora Roberts,Dan Brown)") }}<br>
              {% for error in form.authors.errors %}
                     <span style="color: red;">[{{ error }}]</span>
              {% endfor %}
 
              <!-- PUBLISHED DATE -->
-             {{ form.publishedDate(class_="form-control", placeholder="Published date (ex. 2019-03-23)")}}<br>
+             {{ form.publishedDate(class_="form-control", placeholder="Published date (e.g. 2019-03-23)")}}<br>
             {% for error in form.publishedDate.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
 
              <!-- INDUSTRY IDENIFIERS -->
-             {{ form.industryIdentifiers(class_="form-control", placeholder="Industry identifiers (ex. ISBN_10:0123456789,ISBN_13:0123456789123)")}}<br>
+             {{ form.industryIdentifiers(class_="form-control", placeholder="Industry identifiers (e.g. ISBN_10:0123456789,ISBN_13:0123456789123)")}}<br>
             {% for error in form.industryIdentifiers.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
@@ -43,7 +43,7 @@
             {% endfor %}
 
              <!-- LANGUAGE -->
-             {{ form.language(class_="form-control", placeholder="Language (ex. pl, en)") }}<br>
+             {{ form.language(class_="form-control", placeholder="Language (e.g. pl, en)") }}<br>
             {% for error in form.language.errors %}
                     <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
