@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, jsonify, abort, flash, get_flashed_messages
 from flask_api import status
-from app.forms import SearchForm, AddBookForm, ImportBookForm
-from app.models import db, Book
+from .forms import SearchForm, AddBookForm, ImportBookForm
+from .models import db, Book
 import requests
 from datetime import datetime
 import ast
