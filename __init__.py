@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'rjkrj29r023jr02'
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 db.init_app(app)
 migrate.init_app(app, db)
